@@ -78,7 +78,7 @@
 
 /** GPS */
 #define TD_GEOLOC_USE_CODE 	1
-#define FIX_MAX_HDOP 		500 				// Acceptable minimum horizontal accuracy, 800 to be very accurate
+#define FIX_MAX_HDOP 		500 			// Acceptable minimum horizontal accuracy, 800 to be very accurate
 #define GPS_SLEEP_MODE 		TD_GEOLOC_OFF 		// Because time is long between 2 measures
 #define GPS_PRECISION_TYPE 	TD_GEOLOC_2D_FIX
 
@@ -283,13 +283,14 @@ static void GPSFix(TD_GEOLOC_Fix_t *fix, bool timeout) {
 		for (i = 0; i < size; i++) {
 			DEBUG_PRINTF("crypt[%d]: %x\r\n", i, cryptMessage[i]);
 		}
-
-		// Send Sigfox message
-		TD_SIGFOX_Send(encrypt ? cryptMessage : bytes, size, 2);
-
+		
 		// Stop GPS
 		TD_GEOLOC_StopFix(GPS_SLEEP_MODE);
-		//		GPIO_PinModeSet(gpioPortC, 0, gpioModeDisabled, 0);
+		
+		// Send Sigfox message
+		TD_SIGFOX_Send(encrypt ? cryptMessage : bytes, size, 2);
+		
+		// GPIO_PinModeSet(gpioPortC, 0, gpioModeDisabled, 0);
 		// Reactivate interrupt
 		TD_TOOLS_SWITCH_Start(SwitchId);
 
@@ -308,12 +309,14 @@ static void GPSFix(TD_GEOLOC_Fix_t *fix, bool timeout) {
 
 		TD_GEOLOC_PrintfFix(fix);
 		size = sizeof(timeoutMessage)/sizeof(timeoutMessage[0]);
-		// Send Sigfox message
-		TD_SIGFOX_Send((uint8_t *) timeoutMessage, size, 2);
-
+		
 		// Stop GPS
 		TD_GEOLOC_StopFix(GPS_SLEEP_MODE);
-		//		GPIO_PinModeSet(gpioPortC, 0, gpioModeDisabled, 0);
+		
+		// Send Sigfox message
+		TD_SIGFOX_Send((uint8_t *) timeoutMessage, size, 2);
+		
+		// GPIO_PinModeSet(gpioPortC, 0, gpioModeDisabled, 0);
 		// Reactivate interrupt
 		TD_TOOLS_SWITCH_Start(SwitchId);
 	}
